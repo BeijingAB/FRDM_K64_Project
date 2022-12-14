@@ -39,6 +39,7 @@ void I2C0_DriverIRQHandler(void)
 //		I2C0->C1 &= ~I2C_C1_MST(1);
 
 		a = I2C0->D;
+		a = I2C0->D;
 		a = 0;
 
 		// i2c who am i successful here, need to restart the board power
@@ -81,7 +82,32 @@ void I2C0_DriverIRQHandler(void)
 
 }
 
+// press SW2 to  init i2c
+void key_delay()
+{
+	// Enable clock for port C
+	SIM->SCGC5 |= SIM_SCGC5_PORTC(1);
+
+	// Set as GPIO
+	PORTC->PCR[6] |= PORT_PCR_MUX(1);
+
+	// Set as input
+	GPIOC->PDDR &= ~GPIO_PDDR_PDD(6);
+
+	while (GPIOC->PDIR & GPIO_PDIR_PDI(1 << 6))
+	{
+
+	}
+
+	led_init();
+	red_led_on();
+}
+
 int main(void) {
+
+	key_delay();
+
+
 //	NVIC_EnableIRQ(I2C0_IRQn);
 	// P78 k64 ref manual
 	NVIC->ISER[I2C0_IRQn >> 5] |= 1 << (I2C0_IRQn & 0x1F);
@@ -105,6 +131,7 @@ int main(void) {
 
 	// Transmit mode select, Transmit
 	I2C0->C1 |= I2C_C1_TX(1);
+
 
 	// Master mode, start signal
 	I2C0->C1 |= I2C_C1_MST(1);
