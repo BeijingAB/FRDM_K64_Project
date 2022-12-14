@@ -1,0 +1,7 @@
+../source/led.c:3:6:led_init	4	static
+../source/led.c:37:6:red_led_on	4	static
+../source/led.c:44:6:green_led_on	4	static
+../source/led.c:50:6:blue_led_on	4	static
+../source/led.c:56:6:red_led_off	4	static
+../source/led.c:62:6:green_led_off	4	static
+../source/led.c:67:6:blue_led_off	4	static
