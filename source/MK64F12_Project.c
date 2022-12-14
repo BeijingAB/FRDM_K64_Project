@@ -31,10 +31,6 @@ void I2C0_DriverIRQHandler(void)
 {
 	i++;
 
-	if (i == 4)
-	{
-
-	}
 
 	if (i == 3)
 	{
