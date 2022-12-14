@@ -24,31 +24,35 @@ void I2C0_DriverIRQHandler(void);
 void I2C0_DriverIRQHandler(void)
 {
 	i++;
+	// Clear interrupt
+	I2C0->S |= I2C_S_IICIF(1);
 
+	if (i == 4)
+	{
+
+
+
+		// STOP (When i2c read last data need stop first then read, need dummy read and no ack before last read)
+		I2C0->C1 &= ~I2C_C1_MST(1);
+		a = I2C0->D;
+		a = a;
+	}
 
 	if (i == 3)
 	{
 
-		// Clear interrupt
-		I2C0->S |= I2C_S_IICIF(1);
-
-
 		// Transmit mode select, Transmit
 		I2C0->C1 &= ~I2C_C1_TX(1);
 
-//		I2C0->C1 &= ~I2C_C1_MST(1);
+		// No ack
+		I2C0->C1 |= I2C_C1_TXAK(1);
 
+		// dummy read
 		a = I2C0->D;
-		a = I2C0->D;
-		a = 0;
-
-		// i2c who am i successful here, need to restart the board power
 	}
 
 	if (i == 2)
 	{
-		// Clear interrupt
-		I2C0->S |= I2C_S_IICIF(1);
 
 		// Re-start
 		I2C0->C1 |= I2C_C1_RSTA(1);
@@ -59,13 +63,6 @@ void I2C0_DriverIRQHandler(void)
 
 	if (i == 1)
 	{
-		for (int i = 0; i < 100; i++)
-		{
-
-		}
-
-		// Clear interrupt
-		I2C0->S |= I2C_S_IICIF(1);
 
 		// Tx-> !Last Byte Transmitted
 		if ((I2C0->S & I2C_S_RXAK(1)) == 0)
@@ -99,8 +96,8 @@ void key_delay()
 
 	}
 
-	led_init();
-	red_led_on();
+//	led_init();
+//	red_led_on();
 }
 
 int main(void) {
