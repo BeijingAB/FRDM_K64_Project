@@ -11,7 +11,7 @@
 #include "led.h"
 
 #define I2C_ADDR 0x1D
-#define I2C_WHOAMI 0x0e
+#define I2C_WHOAMI 0x0D
 
 
 static char a;
@@ -33,14 +33,15 @@ void I2C0_DriverIRQHandler(void)
 		I2C0->S |= I2C_S_IICIF(1);
 
 
-//		// Transmit mode select, Transmit
-//		I2C0->C1 &= ~I2C_C1_TX(1);
-//
+		// Transmit mode select, Transmit
+		I2C0->C1 &= ~I2C_C1_TX(1);
+
 //		I2C0->C1 &= ~I2C_C1_MST(1);
 
 		a = I2C0->D;
 		a = 0;
 
+		// i2c who am i successful here, need to restart the board power
 	}
 
 	if (i == 2)
