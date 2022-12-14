@@ -24,7 +24,7 @@ source/MK64F12_Project.o source/MK64F12_Project.d: \
  C:\Users\liangj\git\FRDM_K64_Project\component\serial_manager/fsl_component_serial_manager.h \
  C:\Users\liangj\git\FRDM_K64_Project\component\serial_manager/fsl_component_serial_port_uart.h \
  C:\Users\liangj\git\FRDM_K64_Project\component\uart/fsl_adapter_uart.h \
- ../source/led.h
+ ../source/led.h ../source/i2c.h
 C:\Users\liangj\git\FRDM_K64_Project\board/board.h:
 C:\Users\liangj\git\FRDM_K64_Project\board/clock_config.h:
 C:\Users\liangj\git\FRDM_K64_Project\drivers/fsl_common.h:
@@ -50,3 +50,4 @@ C:\Users\liangj\git\FRDM_K64_Project\component\serial_manager/fsl_component_seri
 C:\Users\liangj\git\FRDM_K64_Project\component\serial_manager/fsl_component_serial_port_uart.h:
 C:\Users\liangj\git\FRDM_K64_Project\component\uart/fsl_adapter_uart.h:
 ../source/led.h:
+../source/i2c.h:
