@@ -6,13 +6,7 @@
 #include "clock_config.h"
 #include "MK64F12.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
-/* TODO: insert other definitions and declarations here. */
-
-/*
- * @brief   Application entry point.
- */
 
 #include "led.h"
 
@@ -39,10 +33,10 @@ void I2C0_DriverIRQHandler(void)
 		I2C0->S |= I2C_S_IICIF(1);
 
 
-		// Transmit mode select, Transmit
-		I2C0->C1 &= ~I2C_C1_TX(1);
-
-		I2C0->C1 &= ~I2C_C1_MST(1);
+//		// Transmit mode select, Transmit
+//		I2C0->C1 &= ~I2C_C1_TX(1);
+//
+//		I2C0->C1 &= ~I2C_C1_MST(1);
 
 		a = I2C0->D;
 		a = 0;
@@ -58,23 +52,22 @@ void I2C0_DriverIRQHandler(void)
 		I2C0->C1 |= I2C_C1_RSTA(1);
 
 		I2C0->D = I2C_D_DATA(I2C_ADDR << 1 | 1);
-		for (int i = 0; i < 100; i++)
-		{
-
-		}
 
 	}
 
 	if (i == 1)
 	{
+		for (int i = 0; i < 100; i++)
+		{
+
+		}
+
 		// Clear interrupt
 		I2C0->S |= I2C_S_IICIF(1);
 
 		// Tx-> !Last Byte Transmitted
 		if ((I2C0->S & I2C_S_RXAK(1)) == 0)
 		{
-//			// Transmit mode select, receive
-//			I2C0->C1 &= ~I2C_C1_TX(1);
 			I2C0->D = I2C_WHOAMI;
 		}
 		else
@@ -118,27 +111,11 @@ int main(void) {
 	// Send slave address
 	I2C0->D = I2C_D_DATA(I2C_ADDR << 1 | 0);
 
+
+
+
+
 	while (1);
 
-
-    /* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-    /* Init FSL debug console. */
-    BOARD_InitDebugConsole();
-#endif
-
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
-        __asm volatile ("nop");
-    }
     return 0 ;
 }
