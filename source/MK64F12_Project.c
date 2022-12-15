@@ -40,12 +40,24 @@ void key_delay()
 #define WHO_AM_I 0x0D
 
 #define STATUS 0x00
+#define OUT_X_MSB 0x01
+#define OUT_X_LSB 0x02
+#define OUT_Y_MSB 0x03
+#define OUT_Y_LSB 0x04
+#define OUT_Z_MSB 0x05
+#define OUT_Z_LSB 0x06
+
 #define SYSMOD 0x0B
 
 #define CTRL_REG1 0x2A
+#define CTRL_REG2 0x2B
+#define CTRL_REG3 0x2C
+#define CTRL_REG4 0x2D
+#define CTRL_REG5 0x2E
 
 
 int main(void) {
+	printf("Test\n\r");
 
 	key_delay();
 
@@ -66,7 +78,16 @@ int main(void) {
 
 
 
-	while (1);
+	while (1)
+	{
+		i2c_single_byte_read(I2C_ADDR, STATUS, &byte);
+
+		byte = 1;
+
+		i2c_single_byte_read(I2C_ADDR, OUT_X_MSB, &byte);
+
+		printf("%d\n\r", byte);
+	}
 
     return 0 ;
 }

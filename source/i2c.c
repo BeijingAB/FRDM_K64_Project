@@ -145,6 +145,10 @@ void i2c_init()
 
 void i2c_single_byte_read(char dev_addr_i, char reg_addr_i, char* byte)
 {
+
+	while (I2C0->S & I2C_S_BUSY(1));
+
+
 	i2c_access_mode = Single_read;
 
 	dev_addr = dev_addr_i;
@@ -174,6 +178,9 @@ void i2c_single_byte_read(char dev_addr_i, char reg_addr_i, char* byte)
 
 void i2c_single_byte_write(char dev_addr_i, char reg_addr_i, char byte)
 {
+	while (I2C0->S & I2C_S_BUSY(1));
+
+
 	i2c_access_mode = Single_write;
 
 	dev_addr = dev_addr_i;
