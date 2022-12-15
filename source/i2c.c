@@ -22,8 +22,8 @@ static char reg_addr;
 // byte read from slave
 static char rd_byte;
 
-// one byte read finished
-static int rd_done = 0;
+// one/multiple byte read/write finished
+static int wr_done = 0;
 
 // how many byte need to send from master to slave
 static int byte_to_send = 0;
@@ -33,6 +33,9 @@ static int switch_Rx = 0;
 
 // Master in Tx or Rx mode
 static int Tx = 0;
+
+// Value write to Slave in single byte write mode
+static char write_value[2];
 
 enum mode
 {
@@ -57,18 +60,18 @@ void I2C0_DriverIRQHandler(void)
 		// STOP (When i2c read last data need stop first then read, need dummy read and no ack before last read)
 		I2C0->C1 &= ~I2C_C1_MST(1);
 		rd_byte = I2C0->D;
-		rd_done = 1;
+		wr_done = 1;
 	}
 
 	// In Transmit mode
 	if (Tx == 1)
 	{
 		// Last byte yet transmitted
-		if (byte_to_send != 0) // 1
+		if (byte_to_send != 0) // 1. one-byte read
 		{
 			if ((I2C0->S & I2C_S_RXAK(1)) == 0)
 			{
-				if (switch_Rx) // 3
+				if (switch_Rx) // 3. one-byte read
 				{
 					// Transmit mode select, Receive
 					I2C0->C1 &= ~I2C_C1_TX(1);
@@ -82,9 +85,9 @@ void I2C0_DriverIRQHandler(void)
 					Tx = 0;
 				}
 				else
-				{ // 1
+				{ // 1. one-byte read
 					byte_to_send--;
-					I2C0->D = reg_addr;
+					I2C0->D = write_value[byte_to_send];
 				}
 
 			}
@@ -96,7 +99,7 @@ void I2C0_DriverIRQHandler(void)
 		}
 		else	// Last byte transmitted
 		{
-			if (i2c_access_mode == Single_read) // 2
+			if (i2c_access_mode == Single_read) // 2. one-byte read
 			{
 				byte_to_send = 2;
 				switch_Rx = 1;
@@ -105,7 +108,14 @@ void I2C0_DriverIRQHandler(void)
 				byte_to_send--;
 				I2C0->D = I2C_D_DATA(dev_addr << 1 | 1);
 			}
-			i = i;
+
+
+			if (i2c_access_mode == Single_write)
+			{
+				// STOP
+				I2C0->C1 &= ~I2C_C1_MST(1);
+				wr_done = 1;
+			}
 		}
 
 	}
@@ -140,9 +150,12 @@ void i2c_single_byte_read(char dev_addr_i, char reg_addr_i, char* byte)
 	dev_addr = dev_addr_i;
 	reg_addr = reg_addr_i;
 
-	rd_done = 0;
+	wr_done = 0;
 	Tx = 1;
 	byte_to_send = 2;
+	switch_Rx = 0;
+
+	write_value[0] = reg_addr;
 
 	// Transmit mode select, Transmit
 	I2C0->C1 |= I2C_C1_TX(1);
@@ -154,9 +167,36 @@ void i2c_single_byte_read(char dev_addr_i, char reg_addr_i, char* byte)
 	// Send slave address
 	I2C0->D = I2C_D_DATA(dev_addr << 1 | 0);
 
-	while (!rd_done);
+	while (!wr_done);
 
 	*byte = rd_byte;
 }
 
+void i2c_single_byte_write(char dev_addr_i, char reg_addr_i, char byte)
+{
+	i2c_access_mode = Single_write;
+
+	dev_addr = dev_addr_i;
+	reg_addr = reg_addr_i;
+
+	wr_done = 0;
+	Tx = 1;
+	byte_to_send = 3;
+	switch_Rx = 0;
+
+	write_value[0] = byte;
+	write_value[1] = reg_addr;
+
+	// Transmit mode select, Transmit
+	I2C0->C1 |= I2C_C1_TX(1);
+
+	// Master mode, start signal
+	I2C0->C1 |= I2C_C1_MST(1);
+
+	byte_to_send--;
+	// Send slave address
+	I2C0->D = I2C_D_DATA(dev_addr << 1 | 0);
+
+	while (!wr_done);
+}
 

@@ -37,7 +37,13 @@ void key_delay()
 }
 
 #define I2C_ADDR 0x1D
-#define I2C_WHOAMI 0x0D
+#define WHO_AM_I 0x0D
+
+#define STATUS 0x00
+#define SYSMOD 0x0B
+
+#define CTRL_REG1 0x2A
+
 
 int main(void) {
 
@@ -46,10 +52,17 @@ int main(void) {
 	i2c_init();
 
 	char byte;
-	i2c_single_byte_read(I2C_ADDR, I2C_WHOAMI, &byte);
+	i2c_single_byte_read(I2C_ADDR, WHO_AM_I, &byte);
 
 	byte = 1;
 
+	i2c_single_byte_write(I2C_ADDR, CTRL_REG1, byte);
+
+	byte = 0;
+
+	i2c_single_byte_read(I2C_ADDR, CTRL_REG1, &byte);
+
+	byte = 1;
 
 
 
