@@ -28,6 +28,9 @@ static int rd_done = 0;
 // how many byte need to send from master to slave
 static int byte_to_send = 0;
 
+// Switch to Rx mode when transmit mode
+static int switch_Rx = 0;
+
 // Master in Tx or Rx mode
 static int Tx = 0;
 
@@ -49,7 +52,7 @@ void I2C0_DriverIRQHandler(void)
 
 
 	// In receive mode
-	if (Tx == 0)
+	if (Tx == 0) //4
 	{
 		// STOP (When i2c read last data need stop first then read, need dummy read and no ack before last read)
 		I2C0->C1 &= ~I2C_C1_MST(1);
@@ -57,31 +60,48 @@ void I2C0_DriverIRQHandler(void)
 		rd_done = 1;
 	}
 
-	if (i == 3)
-	{
-
-		// Transmit mode select, Receive
-		I2C0->C1 &= ~I2C_C1_TX(1);
-
-		// No ack
-		I2C0->C1 |= I2C_C1_TXAK(1);
-
-		// dummy read
-		rd_byte = I2C0->D;
-
-		Tx = 0;
-	}
+//	if (i == 3)
+//	{
+//
+//		// Transmit mode select, Receive
+//		I2C0->C1 &= ~I2C_C1_TX(1);
+//
+//		// No ack
+//		I2C0->C1 |= I2C_C1_TXAK(1);
+//
+//		// dummy read
+//		rd_byte = I2C0->D;
+//
+//		Tx = 0;
+//	}
 
 	// In Transmit mode
 	if (Tx == 1)
 	{
 		// Last byte yet transmitted
-		if (byte_to_send != 0)
+		if (byte_to_send != 0) // 1
 		{
 			if ((I2C0->S & I2C_S_RXAK(1)) == 0)
 			{
-				byte_to_send--;
-				I2C0->D = reg_addr;
+				if (switch_Rx) // 3
+				{
+					// Transmit mode select, Receive
+					I2C0->C1 &= ~I2C_C1_TX(1);
+
+					// No ack
+					I2C0->C1 |= I2C_C1_TXAK(1);
+
+					// dummy read
+					rd_byte = I2C0->D;
+
+					Tx = 0;
+				}
+				else
+				{ // 1
+					byte_to_send--;
+					I2C0->D = reg_addr;
+				}
+
 			}
 			else
 			{
@@ -91,11 +111,13 @@ void I2C0_DriverIRQHandler(void)
 		}
 		else	// Last byte transmitted
 		{
-			if (i2c_access_mode == Single_read && i == 2)
+			if (i2c_access_mode == Single_read) // 2
 			{
+				byte_to_send = 2;
+				switch_Rx = 1;
 				// Re-start
 				I2C0->C1 |= I2C_C1_RSTA(1);
-
+				byte_to_send--;
 				I2C0->D = I2C_D_DATA(dev_addr << 1 | 1);
 			}
 			i = i;
