@@ -60,21 +60,6 @@ void I2C0_DriverIRQHandler(void)
 		rd_done = 1;
 	}
 
-//	if (i == 3)
-//	{
-//
-//		// Transmit mode select, Receive
-//		I2C0->C1 &= ~I2C_C1_TX(1);
-//
-//		// No ack
-//		I2C0->C1 |= I2C_C1_TXAK(1);
-//
-//		// dummy read
-//		rd_byte = I2C0->D;
-//
-//		Tx = 0;
-//	}
-
 	// In Transmit mode
 	if (Tx == 1)
 	{
