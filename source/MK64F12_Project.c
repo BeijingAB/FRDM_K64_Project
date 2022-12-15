@@ -48,7 +48,7 @@ int main(void) {
 	char byte;
 	i2c_single_byte_read(I2C_ADDR, I2C_WHOAMI, &byte);
 
-	byte;
+	byte = 1;
 
 
 

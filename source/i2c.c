@@ -13,10 +13,23 @@
 
 static int i = 0;
 
-
+// i2c slave device address
 static char dev_addr;
+
+// i2c slave register address
 static char reg_addr;
+
+// byte read from slave
 static char rd_byte;
+
+// one byte read finished
+static int rd_done = 0;
+
+// how many byte need to send from master to slave
+static int byte_to_send = 0;
+
+// Master in Tx or Rx mode
+static int Tx = 0;
 
 void I2C0_DriverIRQHandler(void)
 {
@@ -29,6 +42,7 @@ void I2C0_DriverIRQHandler(void)
 		// STOP (When i2c read last data need stop first then read, need dummy read and no ack before last read)
 		I2C0->C1 &= ~I2C_C1_MST(1);
 		rd_byte = I2C0->D;
+		rd_done = 1;
 	}
 
 	if (i == 3)
@@ -41,7 +55,7 @@ void I2C0_DriverIRQHandler(void)
 		I2C0->C1 |= I2C_C1_TXAK(1);
 
 		// dummy read
-		a = I2C0->D;
+		rd_byte = I2C0->D;
 	}
 
 	if (i == 2)
@@ -54,19 +68,27 @@ void I2C0_DriverIRQHandler(void)
 
 	}
 
-	if (i == 1)
+	if (Tx == 1)
 	{
+		if (byte_to_send != 0)
+		{
+			// Tx-> Last Byte yet Transmitted
+			if ((I2C0->S & I2C_S_RXAK(1)) == 0)
+			{
+				byte_to_send--;
+				I2C0->D = reg_addr;
+			}
+			else
+			{
+				// STOP
+				I2C0->C1 &= ~I2C_C1_MST(1);
+			}
+		}
+		else	// Last Byte transmitted
+		{
 
-		// Tx-> !Last Byte Transmitted
-		if ((I2C0->S & I2C_S_RXAK(1)) == 0)
-		{
-			I2C0->D = reg_addr;
 		}
-		else
-		{
-			// STOP
-			I2C0->C1 &= ~I2C_C1_MST(1);
-		}
+
 	}
 }
 
@@ -97,14 +119,23 @@ void i2c_single_byte_read(char dev_addr_i, char reg_addr_i, char* byte)
 	dev_addr = dev_addr_i;
 	reg_addr = reg_addr_i;
 
+	rd_done = 0;
+	Tx = 1;
+	byte_to_send = 2;
+
 	// Transmit mode select, Transmit
 	I2C0->C1 |= I2C_C1_TX(1);
 
 	// Master mode, start signal
 	I2C0->C1 |= I2C_C1_MST(1);
 
+	byte_to_send--;
 	// Send slave address
 	I2C0->D = I2C_D_DATA(dev_addr << 1 | 0);
+
+	while (!rd_done);
+
+	*byte = rd_byte;
 }
 
 
