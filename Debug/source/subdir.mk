@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../source/MK64F12_Project.c \
+../source/accel.c \
 ../source/i2c.c \
 ../source/led.c \
 ../source/semihost_hardfault.c 
 
 C_DEPS += \
 ./source/MK64F12_Project.d \
+./source/accel.d \
 ./source/i2c.d \
 ./source/led.d \
 ./source/semihost_hardfault.d 
 
 OBJS += \
 ./source/MK64F12_Project.o \
+./source/accel.o \
 ./source/i2c.o \
 ./source/led.o \
 ./source/semihost_hardfault.o 
@@ -34,7 +37,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/MK64F12_Project.d ./source/MK64F12_Project.o ./source/i2c.d ./source/i2c.o ./source/led.d ./source/led.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o
+	-$(RM) ./source/MK64F12_Project.d ./source/MK64F12_Project.o ./source/accel.d ./source/accel.o ./source/i2c.d ./source/i2c.o ./source/led.d ./source/led.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o
 
 .PHONY: clean-source
 
