@@ -36,13 +36,37 @@ void key_delay()
 //	red_led_on();
 }
 
-
-
+#define SYSTEM_CLOCK 120000000
+#define BAUD_RATE 115200
+static int sbr = SYSTEM_CLOCK / BAUD_RATE / 16;
 
 int main(void) {
-	printf("Test\n\r");
 
 	key_delay();
+
+	// Enable clock for port B
+	SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
+
+	// PortA Mux as UART0, p248
+	PORTB->PCR[16] |= PORT_PCR_MUX(3); // UART_Rx
+	PORTB->PCR[17] |= PORT_PCR_MUX(3); // UART_Tx
+
+	// Enable UART clock
+	SIM->SCGC4 |= SIM_SCGC4_UART1(1);
+
+	// Baud rate, BDH first, BDL last
+	UART1->BDH |= UART_BDH_SBR(sbr >> 8);
+	UART1->BDL |= UART_BDL_SBR(sbr);
+
+	// Enable receive and transmit
+	UART1->C2 |= UART_C2_TE(1);// | UART_C2_RE(1);
+
+	UART1->D = 'A';
+
+	while (1)
+	{
+		UART1->D = 'A';
+	}
 
 	accel_init();
 	accel acc;
@@ -50,7 +74,7 @@ int main(void) {
 	while (1)
 	{
 		get_accel(&acc);
-		printf("x: %d， y:%d， z:%d\n\r", acc.x, acc.y, acc.z);
+//		printf("x:%d， y:%d， z:%d\n\r", acc.x, acc.y, acc.z);
 		for (int i = 0; i < 655360; i++)
 		{
 
