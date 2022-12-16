@@ -8,6 +8,8 @@
 
 #include "accel.h"
 
+#define WAIT for(int i = 0; i < 1000; i++);
+
 void accel_init()
 {
 	i2c_init();
@@ -31,7 +33,7 @@ void accel_init()
 
 void get_accel(accel* acc)
 {
-	char x_msb, x_lsb, y_msb, y_lsb, z_msb, z_lsb;
+	signed char x_msb, x_lsb, y_msb, y_lsb, z_msb, z_lsb; // fix signed issue by adding signed
 	i2c_single_byte_read(I2C_ADDR, OUT_X_MSB, &x_msb);
 	i2c_single_byte_read(I2C_ADDR, OUT_X_LSB, &x_lsb);
 

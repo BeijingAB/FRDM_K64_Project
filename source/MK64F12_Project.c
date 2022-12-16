@@ -50,7 +50,7 @@ int main(void) {
 	while (1)
 	{
 		get_accel(&acc);
-		printf("x: %d y:%d z:%d\n\r", acc.x, acc.y, acc.z);
+		printf("x: %d， y:%d， z:%d\n\r", acc.x, acc.y, acc.z);
 		for (int i = 0; i < 655360; i++)
 		{
 
