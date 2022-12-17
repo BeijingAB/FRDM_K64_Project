@@ -136,7 +136,7 @@ void i2c_init()
 	PORTE->PCR[24] |= PORT_PCR_MUX(5); // SCL
 	PORTE->PCR[25] |= PORT_PCR_MUX(5); // SDA
 
-	// I2C_0 Freq divider = 576
+	// I2C_0 Freq divider = 576， I2C clock freq 60M, I2C baud rate 100K
 	I2C0->F = I2C_F_MULT(0) | I2C_F_ICR(0x2C);
 
 	// Enable I2C and interrupt

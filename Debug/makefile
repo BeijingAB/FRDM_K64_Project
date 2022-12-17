@@ -8,15 +8,11 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include utilities/subdir.mk
 -include startup/subdir.mk
 -include source/subdir.mk
 -include drivers/subdir.mk
 -include device/subdir.mk
--include component/uart/subdir.mk
--include component/serial_manager/subdir.mk
 -include component/lists/subdir.mk
--include board/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
