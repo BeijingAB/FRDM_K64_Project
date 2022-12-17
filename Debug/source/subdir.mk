@@ -8,21 +8,24 @@ C_SRCS += \
 ../source/accel.c \
 ../source/i2c.c \
 ../source/led.c \
-../source/semihost_hardfault.c 
+../source/semihost_hardfault.c \
+../source/uart.c 
 
 C_DEPS += \
 ./source/MK64F12_Project.d \
 ./source/accel.d \
 ./source/i2c.d \
 ./source/led.d \
-./source/semihost_hardfault.d 
+./source/semihost_hardfault.d \
+./source/uart.d 
 
 OBJS += \
 ./source/MK64F12_Project.o \
 ./source/accel.o \
 ./source/i2c.o \
 ./source/led.o \
-./source/semihost_hardfault.o 
+./source/semihost_hardfault.o \
+./source/uart.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -37,7 +40,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/MK64F12_Project.d ./source/MK64F12_Project.o ./source/accel.d ./source/accel.o ./source/i2c.d ./source/i2c.o ./source/led.d ./source/led.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o
+	-$(RM) ./source/MK64F12_Project.d ./source/MK64F12_Project.o ./source/accel.d ./source/accel.o ./source/i2c.d ./source/i2c.o ./source/led.d ./source/led.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/uart.d ./source/uart.o
 
 .PHONY: clean-source
 

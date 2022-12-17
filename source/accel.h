@@ -1,10 +1,3 @@
-/*
- * accel.h
- *
- *  Created on: Dec 16, 2022
- *      Author: liangj
- */
-
 #ifndef ACCEL_H_
 #define ACCEL_H_
 

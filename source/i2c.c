@@ -1,11 +1,3 @@
-/*
- * i2c.c
- *
- *  Created on: Dec 15, 2022
- *      Author: liangj
- */
-
-
 #include "i2c.h"
 
 

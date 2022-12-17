@@ -1,11 +1,3 @@
-/*
- * accel.c
- *
- *  Created on: Dec 16, 2022
- *      Author: liangj
- */
-
-
 #include "accel.h"
 
 #define WAIT for(int i = 0; i < 1000; i++);

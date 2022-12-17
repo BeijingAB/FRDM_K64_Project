@@ -1,4 +1,2 @@
-../source/MK64F12_Project.c:14:6:key_delay	4	static
-../source/MK64F12_Project.c:44:6:UART0_RX_TX_DriverIRQHandler	4	static
-../source/MK64F12_Project.c:49:6:print	16	static
-../source/MK64F12_Project.c:64:5:main	32	static
+../source/MK64F12_Project.c:11:6:key_delay	4	static
+../source/MK64F12_Project.c:31:5:main	24	static

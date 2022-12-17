@@ -1,10 +1,3 @@
-/*
- * led.h
- *
- *  Created on: Dec 13, 2022
- *      Author: liangj
- */
-
 #ifndef LED_H_
 #define LED_H_
 
