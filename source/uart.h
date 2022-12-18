@@ -4,7 +4,7 @@
 #include "MK64F12.h"
 
 #ifndef UART_CLK
-#define UART_CLK 15000000
+#define UART_CLK 20000000
 #endif
 
 #define UART_BAUD_RATE 115200
