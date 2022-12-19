@@ -43,10 +43,9 @@ void uart_print(char* str)
 void uart_init()
 {
 
-	unsigned int sbr;
-	unsigned int brfa = 0;
+	unsigned int sbr = UART_CLK / UART_BAUD_RATE / 16;  // 27
+	unsigned int brfa = 4; //
 
-	sbr = UART_CLK / UART_BAUD_RATE / 16;
 
 	// Enable clock for port B
 	SIM->SCGC5 |= SIM_SCGC5_PORTB(1);
@@ -65,10 +64,18 @@ void uart_init()
 
 	// Baud rate, BDH first, BDL last
 	UART0->BDH |= UART_BDH_SBR(sbr >> 8);
-	UART0->BDL |= UART_BDL_SBR(sbr);
+	UART0->BDL = UART_BDL_SBR(sbr); // can't use or because there is default
 	UART0->C4 |= UART_C4_BRFA(brfa);
 
 	// Enable receive and transmit
 	UART0->C2 |= UART_C2_TE(1) | UART_C2_RE(1);
 
 }
+
+/*
+ * Note: 1. when set the rfa register, default value is 4, so when set 27 cannot use or |
+ * 2. When busrt mode, need to restart the mcu, otherwise cannot detect the start of first
+ *  sending byte
+ *
+ *
+ * */
