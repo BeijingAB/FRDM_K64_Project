@@ -28,11 +28,39 @@ void key_delay()
 //	red_led_on();
 }
 
+void SDHC_DriverIRQHandler()
+{
+
+}
+
 int main(void) {
 
 //	key_delay();
 
 	clock_init();
+
+
+	// Enable clock for Port E
+	SIM->SCGC5 |= SIM_SCGC5_PORTE(1);
+
+	// Alt 4, p250 ref manual
+	PORTE->PCR[0] |= PORT_PCR_MUX(4);
+	PORTE->PCR[1] |= PORT_PCR_MUX(4);
+	PORTE->PCR[2] |= PORT_PCR_MUX(4);
+	PORTE->PCR[3] |= PORT_PCR_MUX(4);
+	PORTE->PCR[4] |= PORT_PCR_MUX(4);
+	PORTE->PCR[5] |= PORT_PCR_MUX(4);
+
+	// Enable clock for SDHC
+	SIM->SCGC3 |= SIM_SCGC3_SDHC(1);
+
+	// Enable interrupt for SDHC
+	//	NVIC_EnableIRQ(I2C0_IRQn);// P78 k64 ref manual
+	NVIC->ISER[SDHC_IRQn >> 5] |= 1 << (SDHC_IRQn & 0x1F);
+
+	while (1);
+
+
 
 	uart_init();
 	while (1)
