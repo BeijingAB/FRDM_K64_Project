@@ -2,11 +2,11 @@
  * GENERATED FILE - DO NOT EDIT
  * Copyright (c) 2008-2013 Code Red Technologies Ltd,
  * Copyright 2015, 2018-2019 NXP
- * (c) NXP Semiconductors 2013-2022
+ * (c) NXP Semiconductors 2013-2023
  * Generated linker script file for MK64FN1M0xxx12
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.6.1 [Build 8255] [2022-10-03] on Dec 20, 2022, 10:02:35 AM
+ * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Sep 6, 2023 11:25:35 PM
  */
 
 INCLUDE "MK64F12_Project_Debug_library.ld"
@@ -57,9 +57,28 @@ SECTIONS
         ASSERT(!(__FLASH_CONFIG_START__ == __FLASH_CONFIG_END__), "Linker Flash Config Support Enabled, but no .FlashConfig section provided within application");
         /* End of Kinetis Flash Configuration data */
         
+    } > PROGRAM_FLASH
+
+    .text : ALIGN(8)
+    {
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(8);
+    } > PROGRAM_FLASH
+    /*
+     * for exception handling/unwind - some Newlib functions (in common
+     * with C++ and STDC++) use this.
+     */
+    .ARM.extab : ALIGN(8)
+    {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } > PROGRAM_FLASH
+
+    .ARM.exidx : ALIGN(8)
+    {
+        __exidx_start = .;
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        __exidx_end = .;
     } > PROGRAM_FLASH
  
     _etext = .;
@@ -217,22 +236,6 @@ SECTIONS
        PROVIDE(__end_noinit_RAM = .) ;
        PROVIDE(__end_noinit_SRAM_UPPER = .) ;        
     } > SRAM_UPPER AT> SRAM_UPPER
-
-    /*
-     * for exception handling/unwind - some Newlib functions (in common
-     * with C++ and STDC++) use this.
-     */
-    .ARM.extab : ALIGN(8)
-    {
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } > PROGRAM_FLASH
-
-    .ARM.exidx : ALIGN(8)
-    {
-        __exidx_start = .;
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-        __exidx_end = .;
-    } > PROGRAM_FLASH
 
     /* Reserve and place Heap within memory map */
     _HeapSize = 0x1000;

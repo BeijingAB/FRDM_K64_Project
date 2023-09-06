@@ -6,6 +6,7 @@
 #include "led.h"
 #include "i2c.h"
 #include "accel.h"
+#include "rtc.h"
 
 // press SW2 to  init i2c
 void key_delay()
@@ -51,35 +52,37 @@ int main(void) {
 	PORTE->PCR[4] |= PORT_PCR_MUX(4);
 	PORTE->PCR[5] |= PORT_PCR_MUX(4);
 
-	// Enable clock for SDHC
-	SIM->SCGC3 |= SIM_SCGC3_SDHC(1);
-
-	// Enable interrupt for SDHC
-	//	NVIC_EnableIRQ(I2C0_IRQn);// P78 k64 ref manual
-	NVIC->ISER[SDHC_IRQn >> 5] |= 1 << (SDHC_IRQn & 0x1F);
-
-	while (1);
+//	// Enable clock for SDHC
+//	SIM->SCGC3 |= SIM_SCGC3_SDHC(1);
+//
+//	// Enable interrupt for SDHC
+//	//	NVIC_EnableIRQ(I2C0_IRQn);// P78 k64 ref manual
+//	NVIC->ISER[SDHC_IRQn >> 5] |= 1 << (SDHC_IRQn & 0x1F);
+//
+//	while (1);
 
 
 
 	uart_init();
-	while (1)
-	{
-		uart_print("Hello");
-	}
 
 
 	accel_init();
 	accel acc;
 
+	rtc_init(2);
+
+	int count = 0;
 	while (1)
 	{
+
+
 		get_accel(&acc);
-		printf("x:%d， y:%d， z:%d\n\r", acc.x, acc.y, acc.z);
+		printf("x:%d, y:%d, z:%d\n\r", acc.x, acc.y, acc.z);
 		for (int i = 0; i < 655360; i++)
 		{
 
 		}
+		printf("Time elapse %d\r\n", rtc_read());
 
 	}
 

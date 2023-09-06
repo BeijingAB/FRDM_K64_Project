@@ -1,0 +1,2 @@
+rtc.c:10:6:rtc_init	16	static
+rtc.c:30:10:rtc_read	4	static

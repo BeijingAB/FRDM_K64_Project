@@ -1,2 +1,2 @@
-../source/accel.c:5:6:accel_init	16	static
-../source/accel.c:26:6:get_accel	24	static
+accel.c:5:6:accel_init	16	static
+accel.c:26:6:get_accel	24	static

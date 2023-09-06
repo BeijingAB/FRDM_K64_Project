@@ -1,4 +1,4 @@
-../source/i2c.c:42:6:I2C0_DriverIRQHandler	4	static
-../source/i2c.c:116:6:i2c_init	4	static
-../source/i2c.c:138:6:i2c_single_byte_read	16	static
-../source/i2c.c:171:6:i2c_single_byte_write	16	static
+i2c.c:42:6:I2C0_DriverIRQHandler	4	static
+i2c.c:116:6:i2c_init	4	static
+i2c.c:138:6:i2c_single_byte_read	16	static
+i2c.c:171:6:i2c_single_byte_write	16	static

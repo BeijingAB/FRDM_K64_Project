@@ -13,6 +13,7 @@ RM := rm -rf
 -include drivers/subdir.mk
 -include device/subdir.mk
 -include component/lists/subdir.mk
+-include subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -23,37 +24,23 @@ endif
 
 -include ../makefile.defs
 
-OPTIONAL_TOOL_DEPS := \
-$(wildcard ../makefile.defs) \
-$(wildcard ../makefile.init) \
-$(wildcard ../makefile.targets) \
-
-
-BUILD_ARTIFACT_NAME := MK64F12_Project
-BUILD_ARTIFACT_EXTENSION := axf
-BUILD_ARTIFACT_PREFIX :=
-BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
-
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all:
-	+@$(MAKE) --no-print-directory main-build && $(MAKE) --no-print-directory post-build
-
-# Main-build Target
-main-build: MK64F12_Project.axf
+all: MK64F12_Project.axf
 
 # Tool invocations
-MK64F12_Project.axf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+MK64F12_Project.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU Linker'
 	arm-none-eabi-gcc -nostdlib -Xlinker -Map="MK64F12_Project.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -Xlinker --sort-section=alignment -Xlinker --cref -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -T MK64F12_Project_Debug.ld -o "MK64F12_Project.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
+	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) MK64F12_Project.axf
+	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) MK64F12_Project.axf
 	-@echo ' '
 
 post-build:
@@ -61,6 +48,6 @@ post-build:
 	-arm-none-eabi-size "MK64F12_Project.axf"; # arm-none-eabi-objcopy -v -O binary "MK64F12_Project.axf" "MK64F12_Project.bin" ; # checksum -p MK64FN1M0xxx12 -d "MK64F12_Project.bin";
 	-@echo ' '
 
-.PHONY: all clean dependents main-build post-build
+.PHONY: all clean dependents post-build
 
 -include ../makefile.targets
