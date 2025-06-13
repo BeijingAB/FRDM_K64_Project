@@ -64,8 +64,7 @@ int main(void) {
 
 
 	uart_init();
-
-
+	led_init();
 	accel_init();
 	accel acc;
 
@@ -78,6 +77,7 @@ int main(void) {
 
 		get_accel(&acc);
 		printf("x:%d, y:%d, z:%d\n\r", acc.x, acc.y, acc.z);
+
 		for (int i = 0; i < 655360; i++)
 		{
 

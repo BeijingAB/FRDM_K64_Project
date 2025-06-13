@@ -1,12 +1,12 @@
 /*
  * GENERATED FILE - DO NOT EDIT
- * Copyright (c) 2008-2013 Code Red Technologies Ltd,
- * Copyright 2015, 2018-2019 NXP
- * (c) NXP Semiconductors 2013-2023
+ * Copyright 2008-2013 Code Red Technologies Ltd,
+ * Copyright 2013-2025 NXP
+ * SPDX-License-Identifier: BSD-3-Clause
  * Generated linker script file for MK64FN1M0xxx12
  * Created from library.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Sep 6, 2023 11:25:35 PM
+ * MCUXpresso IDE v24.9 [Build 25] [2024-09-26] on 14 June 2025, 1:49:25 am
  */
 
 GROUP (

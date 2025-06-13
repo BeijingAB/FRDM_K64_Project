@@ -1,12 +1,12 @@
 /*
  * GENERATED FILE - DO NOT EDIT
- * Copyright (c) 2008-2013 Code Red Technologies Ltd,
- * Copyright 2015, 2018-2019 NXP
- * (c) NXP Semiconductors 2013-2023
+ * Copyright 2008-2013 Code Red Technologies Ltd,
+ * Copyright 2013-2025 NXP
+ * SPDX-License-Identifier: BSD-3-Clause
  * Generated linker script file for MK64FN1M0xxx12
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Sep 6, 2023 11:25:35 PM
+ * MCUXpresso IDE v24.9 [Build 25] [2024-09-26] on 14 June 2025, 1:49:25 am
  */
 
 INCLUDE "MK64F12_Project_Debug_library.ld"
@@ -57,10 +57,6 @@ SECTIONS
         ASSERT(!(__FLASH_CONFIG_START__ == __FLASH_CONFIG_END__), "Linker Flash Config Support Enabled, but no .FlashConfig section provided within application");
         /* End of Kinetis Flash Configuration data */
         
-    } > PROGRAM_FLASH
-
-    .text : ALIGN(8)
-    {
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(8);
@@ -154,7 +150,7 @@ SECTIONS
     } > SRAM_UPPER AT>PROGRAM_FLASH
 
     /* BSS section for SRAM_LOWER */
-    .bss_RAM2 : ALIGN(8)
+    .bss_RAM2 (NOLOAD) : ALIGN(8)
     {
        PROVIDE(__start_bss_RAM2 = .) ;
        PROVIDE(__start_bss_SRAM_LOWER = .) ;
@@ -168,7 +164,7 @@ SECTIONS
     } > SRAM_LOWER AT> SRAM_LOWER
 
     /* BSS section for FLEX_RAM */
-    .bss_RAM3 : ALIGN(8)
+    .bss_RAM3 (NOLOAD) : ALIGN(8)
     {
        PROVIDE(__start_bss_RAM3 = .) ;
        PROVIDE(__start_bss_FLEX_RAM = .) ;
@@ -182,7 +178,7 @@ SECTIONS
     } > FLEX_RAM AT> FLEX_RAM
 
     /* MAIN BSS SECTION */
-    .bss : ALIGN(8)
+    .bss (NOLOAD) : ALIGN(8)
     {
         _bss = .;
         PROVIDE(__start_bss_RAM = .) ;
@@ -239,7 +235,7 @@ SECTIONS
 
     /* Reserve and place Heap within memory map */
     _HeapSize = 0x1000;
-    .heap :  ALIGN(8)
+    .heap (NOLOAD) :  ALIGN(8)
     {
         _pvHeapStart = .;
         . += _HeapSize;
@@ -249,12 +245,12 @@ SECTIONS
 
      _StackSize = 0x1000;
      /* Reserve space in memory for Stack */
-    .heap2stackfill  :
+    .heap2stackfill (NOLOAD) :
     {
         . += _StackSize;
     } > SRAM_UPPER
     /* Locate actual Stack in memory map */
-    .stack ORIGIN(SRAM_UPPER) + LENGTH(SRAM_UPPER) - _StackSize - 0:  ALIGN(8)
+    .stack ORIGIN(SRAM_UPPER) + LENGTH(SRAM_UPPER) - _StackSize - 0 (NOLOAD) :  ALIGN(8)
     {
         _vStackBase = .;
         . = ALIGN(8);
